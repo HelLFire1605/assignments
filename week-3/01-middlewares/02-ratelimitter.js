@@ -24,4 +24,18 @@ app.post('/user', function(req, res) {
   res.status(200).json({ msg: 'created dummy user' });
 });
 
+app.use((req,res,next)=>{
+ const userId = req.headers["user-id"];
+  console.log(numberOfRequestsForUser[userId]);
+ if(numberOfRequestsForUser[userId]){
+  numberOfRequestsForUser[userId] +=1;
+  if(numberOfRequestsForUser[userId] > 5){
+    res.status(404).send("No more requests can be passed..")
+  }else{
+    numberOfRequestsForUser[userId]  = 1;
+    next();
+  }
+ }
+})
+app.listen(3000);
 module.exports = app;
